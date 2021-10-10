@@ -11,17 +11,16 @@
  let currPlayer = 1; // active player: 1 or 2
  let board = []; // array of rows, each row is array of cells  (board[y][x])
  
+
+
  /** makeBoard: create in-JS board structure:
   *    board = array of rows, each row is array of cells  (board[y][x])
   */
- 
- 
  function makeBoard() {
-   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
+   // TODO: set "board" HEIGHT x WIDTH matrix array containing 0's
    for(y=0;y<HEIGHT;y++){
      board[y]=[]
    }
- 
    for(x=0;x<WIDTH;x++){
      for(y=0;y<HEIGHT;y++){
        board[y][x]=0
@@ -64,9 +63,8 @@
  }
  
  /** findSpotForCol: given column x, return top empty y (null if filled) */
- 
  function findSpotForCol(x) {
-   // TODO: write the real version of this, rather than always returning 0
+   // TODO: Checks every row in the given column (x), searching for a nonzero entry. Once it has found a nonzero entry. It returns the y value of the row above. If the entire column is zero, it returns the y value of the bottom row.
    let emptyColumn = true
    for(i=0;i<=5;i++){
      if(board[i][x]!=0){
@@ -80,7 +78,6 @@
  }
  
  /** placeInTable: update DOM to place piece into HTML table of board */
- 
  function placeInTable(y, x) {
    // TODO: make a div and insert into correct table cell
    const piece = document.createElement("div")
@@ -107,7 +104,10 @@
    if (y === -1) {
      throw alert("That column is full, try another.")
    }
+
+   //Updates the board array
    board[y][x]=currPlayer
+
    // place piece in board and add to HTML table
    // TODO: add line to update in-memory board
    placeInTable(y, x);
@@ -122,10 +122,6 @@
    if (checkForFullBoard()) {
      return endGame('Sorry, the game has ended without a winner. Refresh to play again.')
    }
- 
- 
- 
- 
    // switch players
    // TODO: switch currPlayer 1 <-> 2
    switch(currPlayer){
@@ -138,8 +134,9 @@
  
  
  /** checkForWin: check board cell-by-cell for "does a win start here?" */
- 
  function checkForWin() {
+
+  //Defines function to check for win conditon. Function accepts an array where each element is an array conatining (x,y) coordinates. 
    function _win(cells) {
      // Check four cells to see if they're all color of current player
      //  - cells: list of four (y, x) cells
@@ -155,15 +152,14 @@
      );
    }
  
-   // TODO: read and understand this code. Add comments to help you.
- 
+   // This iterates through each (x,y) coordinate, and generates four arrays for each to send to the _win function. These are defined in as the point and: the three points to the right, the three points above, the three points diagonally up and to the right, and the three point diagonally up and to the left.
    for (y = 0; y < HEIGHT; y++) {
      for (x = 0; x < WIDTH; x++) {
        const horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
        const vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
        const diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
        const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
- 
+      //Sends each of the four arrays to the _win function. If any of them find a win, returns true and triggers the win message.
        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
          return true;
        }
@@ -172,6 +168,7 @@
  }
  
  
+ //This function iterates through each row of the 'board' array. If each of them is nonzero (i.e. has been assigned to player 1 or player 2), this returns true and triggers the full board message.
  function checkForFullBoard() {
    let fullRow = 0
    const notZero = (currentValue)=> currentValue!=0;
@@ -182,6 +179,9 @@
    }
    if(fullRow===HEIGHT){return true}
  }
+
+
+ //Once the rest of the JS has been read this initializes the board 
  makeBoard();
  makeHtmlBoard();
  
